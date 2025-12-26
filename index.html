@@ -242,7 +242,7 @@ let usedSkillThisTurn=false;
 let mines={O:null,X:null};
 let skill={
   O:{block:1,override:1,protect:1,mode:null},
-  X:{block:1,override:1,protect:1,mode:null}
+  X:{block:1,override:2,protect:1,mode:null}
 };
 
 // --- 初期化 ---
@@ -508,7 +508,7 @@ bind(oBlock,"O","block"); bind(oOverride,"O","override"); bind(oProtect,"O","pro
 // --- リセット（確認付き） ---
 document.getElementById("reset").onclick=()=>{
   if(confirm("本当にリセットしますか？")){
-    skill={O:{block:1,override:1,protect:1,mode:null},X:{block:1,override:1,protect:1,mode:null}};
+    skill={ O:{block:1,override:1,protect:1,mode:null}, X:{block:1,override:2,protect:1,mode:null} };
     init();
   }
 };
