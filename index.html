@@ -244,7 +244,53 @@ let skill={
   O:{block:1,override:1,protect:1,mode:null},
   X:{block:1,override:1,protect:1,mode:null}
 };
+// --- タッチ操作での盤面スライド ---
+let touchStartX=0, touchStartY=0;
+const swipeThreshold=30; // 最低移動量でスワイプ判定
 
+const boardEl=document.getElementById("board");
+boardEl.addEventListener("touchstart", e=>{
+  const t=e.touches[0];
+  touchStartX=t.clientX;
+  touchStartY=t.clientY;
+});
+boardEl.addEventListener("touchend", e=>{
+  const t=e.changedTouches[0];
+  const dx=t.clientX - touchStartX;
+  const dy=t.clientY - touchStartY;
+
+  if(Math.abs(dx)>Math.abs(dy) && Math.abs(dx)>swipeThreshold){
+    if(dx>0) shiftBoard("right");
+    else shiftBoard("left");
+  }else if(Math.abs(dy)>swipeThreshold){
+    if(dy>0) shiftBoard("down");
+    else shiftBoard("up");
+  }
+});
+
+// --- 盤面をループ移動 ---
+function shiftBoard(dir){
+  if(gameOver || phase==="mine") return;
+
+  if(dir==="left"){
+    for(let r=0;r<N;r++){
+      const first=board[r].shift();
+      board[r].push(first);
+    }
+  }else if(dir==="right"){
+    for(let r=0;r<N;r++){
+      const last=board[r].pop();
+      board[r].unshift(last);
+    }
+  }else if(dir==="up"){
+    const firstRow=board.shift();
+    board.push(firstRow);
+  }else if(dir==="down"){
+    const lastRow=board.pop();
+    board.unshift(lastRow);
+  }
+  render();
+}
 // --- 初期化 ---
 function init(){
   const b=document.getElementById("board");
